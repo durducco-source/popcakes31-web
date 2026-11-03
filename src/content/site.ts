@@ -1,10 +1,16 @@
-import type { SiteContent } from "./types";
+import type { Media, SiteContent } from "./types";
 
 // Contenido verificado en Instagram @popcakes31 (textos, horario, fotos y vídeos)
-// y en fichas públicas del negocio (dirección, teléfono y valoración en Google).
+// y en fichas públicas del negocio (dirección, teléfono y valoración en Google). No se ha inventado información.
 const PHONE = "+34698291893";
 const WA = `https://wa.me/34698291893?text=${encodeURIComponent("Hola PopCakes31, me gustaría información para un encargo.")}`;
 const URL = "https://durducco-source.github.io/popcakes31-web/";
+const MAPS = "https://www.google.com/maps/dir/?api=1&destination=PopCakes31+Lloret+de+Mar";
+
+const v = (name: string, alt: string): Media => ({ type: "video", src: `/media/${name}.mp4`, poster: `/media/${name}-sm.jpg`, alt });
+const im = (name: string, alt: string): Media => ({ src: `/media/${name}.jpg`, sm: `/media/${name}-sm.jpg`, alt });
+
+const presupuesto = { label: "Pedir presupuesto", href: WA, external: true };
 
 export const site: SiteContent = {
   lang: "es",
@@ -16,134 +22,90 @@ export const site: SiteContent = {
     url: URL,
     image: `${URL}media/og-popcakes31.jpg`,
     keywords: ["pastelería Lloret de Mar", "candy bar Lloret de Mar", "mesa dulce boda Costa Brava", "tarta de boda Lloret", "cafetería Lloret de Mar", "PopCakes31"],
-    jsonLd: {
-      "@context": "https://schema.org",
-      "@type": "Bakery",
-      name: "PopCakes31",
-      url: URL,
-      telephone: PHONE,
-      address: { "@type": "PostalAddress", streetAddress: "Carrer del Comte Ramon Borrell, 7-9, local 5", addressLocality: "Lloret de Mar", postalCode: "17310", addressRegion: "Girona", addressCountry: "ES" },
-      geo: { "@type": "GeoCoordinates", latitude: 41.6997551, longitude: 2.8449081 },
-      openingHoursSpecification: [
-        { "@type": "OpeningHoursSpecification", dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], opens: "08:00", closes: "13:00" },
-        { "@type": "OpeningHoursSpecification", dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], opens: "17:00", closes: "20:00" },
-      ],
-      sameAs: ["https://www.instagram.com/popcakes31/", "https://www.facebook.com/popcakes31/"],
+  },
+  jsonLd: {
+    "@context": "https://schema.org",
+    "@type": "Bakery",
+    name: "PopCakes31",
+    url: URL,
+    telephone: PHONE,
+    address: { "@type": "PostalAddress", streetAddress: "Carrer del Comte Ramon Borrell, 7-9, local 5", addressLocality: "Lloret de Mar", postalCode: "17310", addressRegion: "Girona", addressCountry: "ES" },
+    geo: { "@type": "GeoCoordinates", latitude: 41.6997551, longitude: 2.8449081 },
+    openingHoursSpecification: [
+      { "@type": "OpeningHoursSpecification", dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], opens: "08:00", closes: "13:00" },
+      { "@type": "OpeningHoursSpecification", dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], opens: "17:00", closes: "20:00" },
+    ],
+    sameAs: ["https://www.instagram.com/popcakes31/", "https://www.facebook.com/popcakes31/"],
+  },
+  primary: { label: "Presupuesto", href: WA, external: true, icon: "whatsapp" },
+  phone: PHONE,
+
+  scenes: [
+    {
+      kind: "arrival", id: "inicio", n: "00", label: "Inicio",
+      a: v("boda-tarta", "Novios cortando su tarta de boda"),
+      b: im("mesa-dulce-boda", "Mesa dulce de boda con velas"),
+      kicker: "Repostería creativa & coffee · Lloret de Mar", title: "PopCakes31", sub: "4,8 ★ en Google · 165 reseñas", enter: "Algo dulce",
     },
-  },
-  nav: [
-    { label: "La casa", href: "#casa" },
-    { label: "Eventos", href: "#eventos" },
-    { label: "Galería", href: "#galeria" },
-    { label: "Vídeos", href: "#videos" },
-    { label: "Visítanos", href: "#visitanos" },
+    {
+      kind: "door", id: "candy-bar", n: "01", label: "Candy bar",
+      door: im("candy-bar-columnas", "Mesa dulce de celebración"),
+      track: [
+        v("candy-bar-2", "Dessert table"), im("candy-bar-fresas", "Tartaletas de fresa"), im("candy-bar-merengues", "Merengues"),
+        im("candy-bar-tartaletas", "Tartaletas"), im("candy-bar-pedestal", "Mini postres en pedestal"),
+      ],
+      title: "Mesas dulces de autor", sub: "Mini postres, tartaletas, merengues y flores.", cta: presupuesto,
+    },
+    {
+      kind: "pullback", id: "bodas", n: "02", label: "Bodas",
+      a: im("tarta-boda-pisos", "Tarta de boda de varios pisos"), origin: "50% 30%",
+      b: im("boda-novios", "Novios con su tarta de boda"),
+      title: "Once upon a time", sub: "Tartas de boda y mesas dulces con flores y velas, pensadas para cada pareja.", cta: presupuesto,
+    },
+    {
+      kind: "reel", id: "tartas", n: "03", label: "Tartas",
+      videos: [v("tarta-rosas", "Tarta blanca con cascada de rosas"), v("candy-bar", "Candy bar con mini postres")],
+      title: "Diseños delicados", sub: "Flores y acabados hechos a mano para bodas, bautizos y cumpleaños.",
+    },
+    {
+      kind: "depth", id: "celebraciones", n: "04", label: "Fiestas",
+      back: im("despedida-soltera", "Mesa dulce para una despedida de soltera"),
+      cards: [im("tarta-princesa", "Tarta de princesas"), im("bautizo-catering", "Catering de bautizo")],
+      title: "Bautizos, despedidas y cumpleaños", sub: "Tartas temáticas, mesas dulces y catering salado y dulce.",
+    },
+    {
+      kind: "tilt", id: "brunch", n: "05", label: "Brunch",
+      a: im("brunch", "Mesa de brunch con fruta fresca y bagels"),
+      b: im("mesa-flores", "Mesa dulce con flores"),
+      title: "Breakfast & brunch", title2: "Y en el local, un buen café", cta: presupuesto,
+    },
+    {
+      kind: "strip", id: "dulces", n: "06", label: "Dulces",
+      items: [
+        im("choux-arandanos", "Choux con arándanos"), im("trufas-coco", "Trufas de coco"), im("vasitos-maracuya", "Vasitos de maracuyá"),
+        im("choux-moras", "Choux con moras"), im("vasitos-tiramisu", "Vasitos de tiramisú"), im("mini-postres", "Mini postres"),
+      ],
+    },
+    {
+      kind: "finale", id: "visitanos", n: "07", label: "Visítanos",
+      a: im("candy-bar-blanco", "Candy bar en blanco"),
+      title: "¿Celebramos *algo dulce?*",
+      note: "Cuéntanos tu evento y preparamos una propuesta a tu medida.",
+      ctas: [presupuesto, { label: "Llamar", href: `tel:${PHONE}` }, { label: "Cómo llegar", href: MAPS, external: true }],
+      info: [
+        { label: "Dirección", value: "C/ Comte Ramon Borrell, 7-9 · Lloret de Mar", href: MAPS },
+        { label: "Horario", value: "Lun–sáb 8–13 h · 17–20 h" },
+      ],
+    },
   ],
-  cta: { label: "Pedir presupuesto", href: WA, external: true },
-  hero: {
-    scrollHint: "Desliza",
-    acts: [
-      { label: "Primer acto", title: "Love *story.*", text: "Tartas de boda que se convierten en el centro de vuestro gran día.", media: { type: "video", src: "/media/boda-tarta.mp4", poster: "/media/boda-tarta-sm.jpg", alt: "Novios cortando su tarta de boda" } },
-      { label: "Segundo acto", title: "Candy *bar.*", text: "Mesas dulces de autor: mini postres, tartaletas, merengues y flores.", media: { type: "video", src: "/media/candy-bar.mp4", poster: "/media/candy-bar-sm.jpg", alt: "Candy bar con mini postres" } },
-      { label: "Tercer acto", title: "La *tarta.*", text: "Diseños delicados, con flores y acabados a mano.", media: { type: "video", src: "/media/tarta-rosas.mp4", poster: "/media/tarta-rosas-sm.jpg", alt: "Tarta blanca con cascada de rosas" } },
-      { label: "Cuarto acto", title: "La *fiesta.*", text: "Repostería creativa para bodas, bautizos, cumpleaños y celebraciones en la Costa Brava.", media: { type: "image", src: "/media/candy-bar-columnas.jpg", alt: "Mesa dulce de celebración" } },
-    ],
-  },
-  intro: {
-    id: "casa",
-    eyebrow: "La casa",
-    title: "Repostería creativa *& coffee.*",
-    paragraphs: [
-      "PopCakes31 es una pastelería y cafetería en Lloret de Mar dedicada a la repostería creativa: tartas, mini postres y mesas dulces que se recuerdan.",
-      "Preparamos candy bars y dessert tables para bodas, bautizos, despedidas y cumpleaños, además de catering de desayunos y brunch. Y en el local, un buen café con algo dulce.",
-    ],
-    stats: [
-      { value: "4,8", label: "Google · 165 reseñas" },
-      { value: "Bodas", label: "Tartas y mesas dulces" },
-      { value: "Eventos", label: "Catering y brunch" },
-      { value: "Coffee", label: "En Lloret de Mar" },
-    ],
-  },
-  chapters: {
-    id: "eventos",
-    eyebrow: "Eventos",
-    title: "Cada celebración, *su mesa dulce.*",
-    items: [
-      {
-        label: "Bodas",
-        title: "Once upon *a time.*",
-        text: "Tartas de boda de varios pisos y mesas dulces con flores, velas y mini postres, pensadas para el estilo de cada pareja.",
-        bullets: ["Tartas de boda personalizadas", "Candy bar y dessert table", "Decoración con flores y velas"],
-        media: { type: "image", src: "/media/mesa-dulce-boda.jpg", alt: "Mesa dulce de boda con velas" },
-        link: { label: "Pedir presupuesto", href: WA, external: true },
-      },
-      {
-        label: "Celebraciones",
-        title: "Bautizos, despedidas *y cumpleaños.*",
-        text: "Desde la tarta de princesa para un octavo cumpleaños hasta la mesa de una despedida de soltera o el catering de un bautizo.",
-        bullets: ["Tartas temáticas", "Mesas dulces para fiestas", "Catering salado y dulce"],
-        media: { type: "image", src: "/media/tarta-princesa.jpg", alt: "Tarta de princesas para un cumpleaños" },
-      },
-      {
-        label: "Brunch",
-        title: "Breakfast *& brunch.*",
-        text: "Catering de desayunos y brunch con fruta fresca, bagels, pastelería y mucho color.",
-        media: { type: "image", src: "/media/brunch.jpg", alt: "Mesa de brunch con fruta fresca y bagels" },
-      },
-    ],
-  },
-  gallery: {
-    id: "galeria",
-    eyebrow: "Galería",
-    title: "Dulce *por todas partes.*",
-    items: [
-      { type: "image", src: "/media/tarta-boda-pisos.jpg", alt: "Tarta de boda de varios pisos" },
-      { type: "image", src: "/media/choux-arandanos.jpg", alt: "Choux con crema y arándanos" },
-      { type: "image", src: "/media/candy-bar-fresas.jpg", alt: "Candy bar con tartaletas de fresa" },
-      { type: "image", src: "/media/trufas-coco.jpg", alt: "Trufas de coco" },
-      { type: "image", src: "/media/vasitos-maracuya.jpg", alt: "Vasitos de maracuyá" },
-      { type: "image", src: "/media/despedida-soltera.jpg", alt: "Mesa dulce para una despedida de soltera" },
-      { type: "image", src: "/media/choux-moras.jpg", alt: "Choux con moras" },
-      { type: "image", src: "/media/mesa-flores.jpg", alt: "Mesa dulce con flores" },
-      { type: "image", src: "/media/vasitos-tiramisu.jpg", alt: "Vasitos de tiramisú" },
-      { type: "image", src: "/media/candy-bar-blanco.jpg", alt: "Candy bar en blanco" },
-    ],
-  },
-  reels: {
-    id: "videos",
-    eyebrow: "Vídeos",
-    title: "Momentos *en movimiento.*",
-    items: [
-      { type: "video", src: "/media/boda-tarta.mp4", poster: "/media/boda-tarta-sm.jpg", alt: "Love story" },
-      { type: "video", src: "/media/candy-bar.mp4", poster: "/media/candy-bar-sm.jpg", alt: "Candy bar" },
-      { type: "video", src: "/media/tarta-rosas.mp4", poster: "/media/tarta-rosas-sm.jpg", alt: "Tarta de rosas" },
-      { type: "video", src: "/media/candy-bar-2.mp4", poster: "/media/candy-bar-2-sm.jpg", alt: "Dessert table" },
-    ],
-  },
-  contact: {
-    id: "visitanos",
-    eyebrow: "Visítanos",
-    title: "Café y dulces *en Lloret.*",
-    address: ["Carrer del Comte Ramon Borrell, 7-9, local 5", "17310 Lloret de Mar (Girona)"],
-    directionsUrl: "https://www.google.com/maps/dir/?api=1&destination=PopCakes31+Lloret+de+Mar",
-    mapEmbed: "https://www.google.com/maps?q=PopCakes31,+Carrer+del+Comte+Ramon+Borrell+7,+17310+Lloret+de+Mar&z=17&output=embed",
-    phone: { label: "698 29 18 93", href: `tel:${PHONE}` },
-    whatsapp: { label: "WhatsApp 698 29 18 93", href: WA },
-    hours: [
-      { day: "Lunes a sábado", value: "8:00–13:00 · 17:00–20:00" },
-      { day: "Domingo", value: "Cerrado" },
-    ],
+
+  footer: {
+    address: { label: "Carrer del Comte Ramon Borrell, 7-9, local 5 · 17310 Lloret de Mar", href: MAPS },
+    contacts: [{ label: "698 29 18 93", href: `tel:${PHONE}` }, { label: "WhatsApp", href: WA }],
+    hours: [{ day: "Lunes a sábado", value: "8–13 · 17–20 h" }, { day: "Domingo", value: "Cerrado" }],
     hoursNote: "Horario publicado por PopCakes31 en Instagram.",
-    socials: [
-      { label: "Instagram de PopCakes31", href: "https://www.instagram.com/popcakes31/", icon: "instagram" },
-      { label: "Facebook de PopCakes31", href: "https://www.facebook.com/popcakes31/", icon: "facebook" },
-    ],
+    socials: [{ label: "Instagram", href: "https://www.instagram.com/popcakes31/" }, { label: "Facebook", href: "https://www.facebook.com/popcakes31/" }],
+    sources: "Fotos y vídeos: Instagram @popcakes31",
+    line: "© 2026 PopCakes31 · Lloret de Mar",
   },
-  finale: {
-    title: "¿Celebramos *algo dulce?*",
-    text: "Cuéntanos tu evento y preparamos una propuesta a tu medida.",
-    cta: { label: "Pedir presupuesto", href: WA, external: true },
-    media: { type: "image", src: "/media/candy-bar-merengues.jpg", alt: "" },
-  },
-  floating: { label: "Presupuesto", href: WA, external: true, icon: "whatsapp" },
-  footer: { line: "© 2026 PopCakes31 · Lloret de Mar", credit: "Diseño web por DURDUC" },
 };
